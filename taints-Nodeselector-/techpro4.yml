@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    environment: dev
+spec:
+  replicas: 15
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: size
+                operator: NotIn # NotIn, Exists and DoesNotExist  #durum var ise key=size ve değeri large veya medium  olan
+                values:      #operator=NotIn dersen böyle değerleri makinalara kurma
+                - large
+                - medium

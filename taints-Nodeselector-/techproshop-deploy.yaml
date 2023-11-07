@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techproshop
+  labels:
+    app: techproshop
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: techproshop
+  template:
+    metadata:
+      labels:
+        app: techproshop
+    spec:
+      containers:
+      - name: techproshop
+        image: techprodevops348/techpro-shop
+        ports:
+        - containerPort: 80
+      tolerations:   #Bu özelliği db ye vermediğim zaman bu tolerationsun hiç bir özelliği olmaz db nerdeyse buda orda olur.Çünkü 2si bağlı birbirine 
+      - key: "techpro"
+        operator: "Exists"
+        effect: "NoSchedule"
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - db
+            topologyKey: "kubernetes.io/hostname"  #aynı makinada oluştursun key ve value aynı olan pod ile bu podu
+            

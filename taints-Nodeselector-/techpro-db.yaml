@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: techpro-db
+  labels:
+    tier: db
+spec:
+  containers:
+  - name: techpro-db
+    image: techprodevops348/techpro-db
+    imagePullPolicy: IfNotPresent  #Node da böyle bir pod  mevcut değilse oluştur.
+  restartPolicy: Always
+
+  #tolerations:   #Bu özelliği db ye vermediğim zaman bu tolerationsun hiç bir özelliği olmaz db nerdeyse buda orda olur.Çünkü 2si bağlı birbirine.İkisine de versek olur.Sadece db ye versekte yine de bu komut işlemez.
+ # - key: "techpro"
+ #   operator: "Exists"
+  #  effect: "NoSchedule"
