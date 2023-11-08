@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readiness
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      test: readiness
+  template:
+    metadata:
+      labels:
+        test: readiness
+    spec:
+      containers:
+      - name: readiness
+        image: techprodevops348/readinessprobe
+        ports:
+        - containerPort: 80  #45 saniyeden önce endpoint bağlanmaz çünkü readiness probe 45 sn den sonra çalışır image içinde
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: readiness-http
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30001
+  selector:
+    test: readiness
+  type: NodePort

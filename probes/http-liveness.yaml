@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-http
+spec:
+  containers:
+  - name: liveness
+    image: techprodevops348/probes
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      initialDelaySeconds: 3  #başlangıçta 3 sn bekle ve 3 sn den sonra işleme geçsin
+      periodSeconds: 3 #her 3 saniyede kontrol etsin
+---
+apiVersion: v1
+kind: Service   
+metadata:
+  name: liveness-svc
+spec:
+  type: NodePort  
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30001
+  selector:
+    test: liveness

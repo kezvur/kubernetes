@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: techprodevops348/probes
+    args:
+    - /bin/sh  #shell içine gir ve touch komutuyla /tmp/healthy dosyasını oluştur.
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600 #600 önemi yok #dosya oluştur 30 sn sonra sil sonra   livenessProbe  tekrar bu dosyayo oluşturuyor.
+    livenessProbe:
+      exec:
+        command:  #aşağıdaki komutları çalıştırmak için
+        - cat
+        - /tmp/healthy #bu dosyayı bulamazsa sağlıksız olduğunu algılıyor ve containerı yeniden başlatıyor.
+      initialDelaySeconds: 5
+      periodSeconds: 5
